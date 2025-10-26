@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie History - AI Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="history-page">
+    
+    <!-- Navigation Bar -->
+    <nav class="top-nav history-nav">
+        <div class="nav-back-container">
+            <a href="/create" class="nav-back">
+                <div class="back-icon">
+                    <span>←</span>
+                </div>
+                <span class="back-text">Back to Create</span>
+            </a>
+        </div>
+        
+           <div class="nav-title-container">
+               <div class="nav-title">
+                   <div class="title-icon">
+                       <div class="icon-bg"></div>
+                       <span class="icon-text">📚</span>
+                   </div>
+                   <div class="title-text">
+                       <h1>Movie History</h1>
+                       <p>Your AI-Generated Collection</p>
+                   </div>
+               </div>
+           </div>
+        
+        <div class="nav-right">
+            <a href="/create" class="create-btn">
+                <div class="btn-icon">
+                    <span>✨</span>
+                </div>
+                <div class="btn-text">
+                    <span class="btn-main">Create New</span>
+                    <span class="btn-sub">AI Movie</span>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="history-container">
+        <div class="history-header">
+            <h1 class="history-title">Your Collection</h1>
+            <p class="history-subtitle">Discover and manage your AI-generated masterpieces</p>
+            
+            <!-- Search and Filter -->
+            <div class="history-controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search movies..." class="search-input">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                    <button class="filter-btn" data-filter="in-progress">In Progress</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Movies Grid -->
+        <div class="movies-grid" id="moviesGrid">
+            <!-- Movies will be loaded here dynamically -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">🎬</div>
+            <h3>No movies yet</h3>
+            <p>Create your first AI-generated movie to see it here!</p>
+            <a href="/create" class="btn-primary">Create Movie</a>
+        </div>
+    </div>
+
+    <!-- Movie Details Modal -->
+    <div class="modal" id="movieModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Movie Details</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Movie details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn-primary" onclick="downloadMovie()">Download Video</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/history.js') }}"></script>
+</body>
+</html>

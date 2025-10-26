@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script - AI Movie Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🎬 Generated Script</h1>
+            <div id="scriptContainer" class="script-content">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Generating your script...</p>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button class="btn" onclick="regenerateScript()">🔄 Regenerate Script</button>
+                <button class="btn" onclick="approveScript()">✓ Approve & Generate Images</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let movieData = {};
+        let scenes = [];
+
+        // Display script
+        function displayScript(scriptData) {
+            const container = document.getElementById('scriptContainer');
+            scenes = scriptData.scenes;
+            movieData = scriptData.movie_data;
+            
+            let html = '<div class="script-display">';
+            
+            scenes.forEach((scene, index) => {
+                html += `
+                    <div class="scene-card">
+                        <h3>Scene ${scene.id}: ${scene.title}</h3>
+                        <p><strong>Genre:</strong> ${scene.genre || movieData.genre}</p>
+                        <p><strong>Style:</strong> ${scene.style || movieData.style}</p>
+                        <div class="scene-content">
+                            <h4>Content:</h4>
+                            <p>${scene.content}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function regenerateScript() {
+            // Call backend to regenerate script
+            fetch('/regenerate_script', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(movieData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayScript(data);
+                }
+            });
+        }
+
+        function approveScript() {
+            // Redirect to images page
+            window.location.href = '/images';
+        }
+
+        // Load script on page load
+        window.addEventListener('load', function() {
+            fetch('/get_script')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayScript(data);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

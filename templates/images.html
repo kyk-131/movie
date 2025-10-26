@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Images - AI Movie Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🎨 Scene Images</h1>
+            <p>Generating images for each scene using SDXL Lightning model...</p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="imageProgress" style="width: 0%"></div>
+            </div>
+            <p id="progressText">Preparing image generation...</p>
+            
+            <div id="imagesContainer" class="images-grid">
+                <!-- Images will be generated here -->
+            </div>
+            
+            <div class="text-center mt-4">
+                <button class="btn" onclick="generateAllImages()">🎨 Generate All Images</button>
+                <button class="btn" onclick="approveImages()">✓ Approve & Generate Video</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let scenes = [];
+        let images = [];
+
+        function generateAllImages() {
+            const container = document.getElementById('imagesContainer');
+            container.innerHTML = '';
+            
+            // Create placeholders for all scenes
+            scenes.forEach((scene, index) => {
+                const sceneCard = document.createElement('div');
+                sceneCard.className = 'scene-card';
+                sceneCard.id = `scene-${index}`;
+                sceneCard.innerHTML = `
+                    <h3>Scene ${scene.id}: ${scene.title}</h3>
+                    <p><strong>Genre:</strong> ${scene.genre}</p>
+                    <p><strong>Style:</strong> ${scene.style}</p>
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Generating image...</p>
+                    </div>
+                    <button class="btn" onclick="regenerateImage(${index})" style="margin-top: 10px;">🔄 Regenerate</button>
+                `;
+                container.appendChild(sceneCard);
+            });
+            
+            // Generate images sequentially
+            generateImagesSequentially();
+        }
+
+        async function generateImagesSequentially() {
+            for (let i = 0; i < scenes.length; i++) {
+                document.getElementById('progressText').textContent = `Generating image ${i + 1} of ${scenes.length}...`;
+                document.getElementById('imageProgress').style.width = ((i / scenes.length) * 100) + '%';
+                
+                try {
+                    const response = await fetch('/generate_image', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            scene_id: scenes[i].id,
+                            scene_content: scenes[i].content,
+                            genre: scenes[i].genre,
+                            style: scenes[i].style,
+                            prompt: scenes[i].content + ', ' + scenes[i].genre + ' style, ' + scenes[i].style
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        images[i] = data.image_path;
+                        updateSceneCard(i, scenes[i], data.image_path);
+                    } else {
+                        updateSceneCard(i, scenes[i], null, data.error);
+                    }
+                } catch (error) {
+                    updateSceneCard(i, scenes[i], null, error.message);
+                }
+            }
+            
+            document.getElementById('imageProgress').style.width = '100%';
+            document.getElementById('progressText').textContent = '✓ All images generated successfully!';
+        }
+
+        function updateSceneCard(index, scene, imagePath, error = null) {
+            const card = document.getElementById(`scene-${index}`);
+            
+            if (imagePath) {
+                card.innerHTML = `
+                    <h3>Scene ${scene.id}: ${scene.title}</h3>
+                    <p><strong>Genre:</strong> ${scene.genre}</p>
+                    <p><strong>Style:</strong> ${scene.style}</p>
+                    <img src="${imagePath}" alt="Scene ${scene.id}" class="scene-image" />
+                    <button class="btn" onclick="regenerateImage(${index})" style="margin-top: 10px;">🔄 Regenerate</button>
+                `;
+            } else {
+                card.innerHTML = `
+                    <h3>Scene ${scene.id}: ${scene.title}</h3>
+                    <p><strong>Genre:</strong> ${scene.genre}</p>
+                    <p><strong>Style:</strong> ${scene.style}</p>
+                    <div class="error">Error: ${error}</div>
+                    <button class="btn" onclick="regenerateImage(${index})" style="margin-top: 10px;">🔄 Try Again</button>
+                `;
+            }
+        }
+
+        async function regenerateImage(index) {
+            const card = document.getElementById(`scene-${index}`);
+            card.innerHTML = `
+                <h3>Scene ${scenes[index].id}: ${scenes[index].title}</h3>
+                <p><strong>Genre:</strong> ${scenes[index].genre}</p>
+                <p><strong>Style:</strong> ${scenes[index].style}</p>
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Regenerating image...</p>
+                </div>
+            `;
+            
+            try {
+                const response = await fetch('/generate_image', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        scene_id: scenes[index].id,
+                        scene_content: scenes[index].content,
+                        genre: scenes[index].genre,
+                        style: scenes[index].style,
+                        prompt: scenes[index].content + ', ' + scenes[index].genre + ' style, ' + scenes[index].style
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    images[index] = data.image_path;
+                    updateSceneCard(index, scenes[index], data.image_path);
+                } else {
+                    updateSceneCard(index, scenes[index], null, data.error);
+                }
+            } catch (error) {
+                updateSceneCard(index, scenes[index], null, error.message);
+            }
+        }
+
+        function approveImages() {
+            // Redirect to video page
+            window.location.href = '/video';
+        }
+
+        // Load scenes on page load
+        window.addEventListener('load', function() {
+            fetch('/get_scenes')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    scenes = data.scenes;
+                    generateAllImages();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

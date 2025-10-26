@@ -12,21 +12,203 @@
         <div class="stars2"></div>
         <div class="stars3"></div>
         
+        <!-- Glass morphism content card -->
         <div class="content">
-            <h1 class="glitch" data-text="AI MOVIE GENERATOR">AI MOVIE GENERATOR</h1>
-            <p class="subtitle">Create cinematic masterpieces with AI</p>
-            <p class="description">Transform your ideas into stunning video experiences</p>
-            
-            <a href="/create" class="cta-button">
-                <span>Create Movie</span>
-                <div class="button-glow"></div>
-            </a>
+            <div class="content-inner">
+                <div class="ai-badge">
+                    <span>✦ POWERED BY AI</span>
+                </div>
+                <h1 class="glitch" data-text="AI MOVIE GENERATOR">AI MOVIE GENERATOR</h1>
+                <p class="subtitle">Create cinematic masterpieces with AI</p>
+                <p class="description">Transform your ideas into stunning video experiences</p>
+                
+                <!-- Feature highlights -->
+                <div class="features">
+                    <div class="feature-item">
+                        <span class="feature-icon">🎬</span>
+                        <span>AI Script Writing</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🎨</span>
+                        <span>Scene Generation</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🎥</span>
+                        <span>Video Creation</span>
+                    </div>
+                </div>
+                
+                <!-- Video Player Section -->
+                <div class="video-showcase">
+                    <div class="video-container">
+                        <div class="video-player">
+                            <video id="demoVideo" class="demo-video" autoplay muted loop playsinline>
+                                <source src="/teamspace/studios/this_studio/movie/sample.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay" id="videoOverlay">
+                                <div class="play-button" id="playButton">
+                                    <div class="play-icon">▶</div>
+                                </div>
+                                <div class="video-controls">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill"></div>
+                                    </div>
+                                    <div class="time-display">
+                                        <span class="current-time">0:00</span>
+                                        <span class="duration">0:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-border">
+                            <div class="border-ring"></div>
+                            <div class="border-ring"></div>
+                            <div class="border-ring"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Section -->
+                <div class="stats-section">
+                    <div class="stat-item">
+                        <div class="stat-number">10K+</div>
+                        <div class="stat-label">Movies Created</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Genres</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">99%</div>
+                        <div class="stat-label">Satisfaction</div>
+                    </div>
+                </div>
+                
+                <!-- How It Works Section -->
+                <div class="how-it-works">
+                    <h2>How It Works</h2>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Describe Your Vision</h3>
+                                <p>Tell us your movie idea, genre, and style preferences</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>AI Generates Script</h3>
+                                <p>Our AI creates a professional screenplay with scenes</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h3>Visualize Scenes</h3>
+                                <p>AI generates stunning images for each scene</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h3>Create Video</h3>
+                                <p>Transform everything into a complete movie</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonials -->
+                <div class="testimonials">
+                    <h2>What Creators Say</h2>
+                    <div class="testimonial-slider">
+                        <div class="testimonial active">
+                            <div class="testimonial-content">
+                                <p>"This is absolutely incredible! I created a sci-fi movie in minutes that would have taken weeks to plan."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">👨‍💻</div>
+                                    <div class="author-info">
+                                        <div class="author-name">Alex Chen</div>
+                                        <div class="author-title">Filmmaker</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="testimonial">
+                            <div class="testimonial-content">
+                                <p>"The AI script generation is mind-blowing. It understands context and creates engaging dialogue."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">🎭</div>
+                                    <div class="author-info">
+                                        <div class="author-name">Sarah Johnson</div>
+                                        <div class="author-title">Screenwriter</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="testimonial">
+                            <div class="testimonial-content">
+                                <p>"Perfect for content creators! I can now produce high-quality videos for my channel effortlessly."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">📹</div>
+                                    <div class="author-info">
+                                        <div class="author-name">Mike Rodriguez</div>
+                                        <div class="author-title">YouTuber</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-dots">
+                        <span class="dot active" data-slide="0"></span>
+                        <span class="dot" data-slide="1"></span>
+                        <span class="dot" data-slide="2"></span>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <a href="/create" class="cta-button">
+                        <span class="btn-icon">🎬</span>
+                        <span>CREATE YOUR MOVIE</span>
+                        <span class="btn-arrow">→</span>
+                        <div class="button-glow"></div>
+                        <div class="button-particles"></div>
+                    </a>
+                    <a href="#demo" class="secondary-button">
+                        <span class="btn-icon">▶</span>
+                        <span>WATCH DEMO</span>
+                    </a>
+                </div>
+                
+                <!-- Feature Tags -->
+                <div class="feature-tags">
+                    <div class="feature-button">AI Script</div>
+                    <div class="feature-button">Scene Generation</div>
+                    <div class="feature-button">Video Synthesis</div>
+                    <div class="feature-button">Audio Enhancement</div>
+                </div>
+            </div>
         </div>
         
+        <!-- Enhanced floating elements -->
         <div class="floating-elements">
             <div class="cube"></div>
             <div class="sphere"></div>
             <div class="pyramid"></div>
+            <div class="ring"></div>
+            <div class="triangle"></div>
+        </div>
+        
+        <!-- Particle system -->
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
         </div>
     </div>
     

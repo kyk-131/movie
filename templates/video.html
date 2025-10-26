@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video - AI Movie Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🎬 Final Video</h1>
+            <p>Generating your movie from the approved images...</p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="videoProgress" style="width: 0%"></div>
+            </div>
+            <p id="progressText">Preparing video generation...</p>
+            
+            <div id="videoContainer" class="video-container">
+                <!-- Video will be displayed here -->
+            </div>
+            
+            <div class="text-center mt-4">
+                <button class="btn" onclick="regenerateVideo()">🔄 Regenerate Video</button>
+                <button class="btn" onclick="downloadVideo()">⬇️ Download Video</button>
+                <button class="btn" onclick="shareVideo()">🔗 Share</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let videoPath = '';
+
+        function generateVideo() {
+            document.getElementById('progressText').textContent = 'Generating video...';
+            
+            // Simulate progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 10;
+                document.getElementById('videoProgress').style.width = progress + '%';
+                
+                if (progress >= 90) {
+                    clearInterval(progressInterval);
+                }
+            }, 500);
+            
+            fetch('/generate_video', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                clearInterval(progressInterval);
+                document.getElementById('videoProgress').style.width = '100%';
+                
+                if (data.success) {
+                    videoPath = data.video_path;
+                    displayVideo(data.video_path);
+                    document.getElementById('progressText').textContent = '✓ Video generation complete!';
+                } else {
+                    document.getElementById('progressText').textContent = 'Error: ' + data.error;
+                }
+            })
+            .catch(error => {
+                clearInterval(progressInterval);
+                document.getElementById('progressText').textContent = 'Error: ' + error.message;
+            });
+        }
+
+        function displayVideo(path) {
+            const container = document.getElementById('videoContainer');
+            container.innerHTML = `
+                <video controls autoplay style="max-width: 100%; border-radius: 12px;">
+                    <source src="${path}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            `;
+        }
+
+        function regenerateVideo() {
+            document.getElementById('videoContainer').innerHTML = '';
+            document.getElementById('progressText').textContent = 'Regenerating video...';
+            document.getElementById('videoProgress').style.width = '0%';
+            generateVideo();
+        }
+
+        function downloadVideo() {
+            if (videoPath) {
+                const a = document.createElement('a');
+                a.href = videoPath;
+                a.download = 'my_ai_movie.mp4';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        }
+
+        function shareVideo() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My AI Generated Movie',
+                    text: 'Check out my AI-generated movie!',
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Link copied to clipboard!');
+                });
+            }
+        }
+
+        // Generate video on page load
+        window.addEventListener('load', function() {
+            generateVideo();
+        });
+    </script>
+</body>
+</html>
