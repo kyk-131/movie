@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Movie - AI Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="create-page">
+    <div class="create-container">
+        <!-- Step 1: Title & Info -->
+        <div id="step1" class="step active">
+            <h2 class="step-title">Movie Details</h2>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="movieTitle" placeholder="Enter movie title" />
+            </div>
+            <div class="form-group">
+                <label>Genre</label>
+                <select id="movieGenre">
+                    <option>Action</option>
+                    <option>Drama</option>
+                    <option>Sci-Fi</option>
+                    <option>Thriller</option>
+                    <option>Comedy</option>
+                    <option>Horror</option>
+                    <option>Romance</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="movieDescription" placeholder="Describe your movie idea..." rows="5"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Style</label>
+                <select id="movieStyle">
+                    <option>Cinematic</option>
+                    <option>Documentary</option>
+                    <option>Artistic</option>
+                    <option>Realistic</option>
+                    <option>Dreamlike</option>
+                </select>
+            </div>
+            <button class="btn-primary" onclick="nextStep()">Generate Script</button>
+        </div>
+
+        <!-- Step 2: Review Script -->
+        <div id="step2" class="step">
+            <h2 class="step-title">Generated Script</h2>
+            <div id="scriptContainer" class="script-container"></div>
+            <div class="button-group">
+                <button class="btn-secondary" onclick="regenerateScript()">Regenerate</button>
+                <button class="btn-primary" onclick="approveScript()">Approve & Continue</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Image Generation -->
+        <div id="step3" class="step">
+            <h2 class="step-title">Generating Images</h2>
+            <div id="imagesContainer" class="images-container"></div>
+            <div class="progress-info">
+                <div id="progressText" class="progress-text">Processing...</div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Video Generation -->
+        <div id="step4" class="step">
+            <h2 class="step-title">Generating Video</h2>
+            <div class="video-generation">
+                <div class="loading-animation"></div>
+                <p class="processing-text">Creating your cinematic masterpiece...</p>
+                <div class="progress-bar">
+                    <div id="videoProgress" class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Final Result -->
+        <div id="step5" class="step">
+            <h2 class="step-title">Your Movie is Ready!</h2>
+            <div id="finalVideo" class="final-video-container"></div>
+            <div class="button-group">
+                <button class="btn-secondary" onclick="generatePoster()">Generate Poster</button>
+                <button class="btn-primary" onclick="downloadVideo()">Download Video</button>
+                <button class="btn-secondary" onclick="shareMovie()">Share</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/create.js') }}"></script>
+</body>
+</html>
