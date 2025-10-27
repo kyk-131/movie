@@ -494,31 +494,11 @@ def model_info():
             },
             'video_generation': {
                 'model': 'Wan (Video Generation)',
-                'description': 'AI-powered video generation with cinematic effects',
+                'description': 'AI-powered video generation from images and scripts',
                 'capabilities': {
-                    'input': 'Images + Script text + Movie metadata',
-                    'output': 'High-quality MP4 video files (24fps)',
-                    'features': [
-                        'Genre-specific transitions (crossfade, fade, etc.)',
-                        'Cinematic fade in/out effects',
-                        'Title overlays with custom styling',
-                        'Genre/style information overlays',
-                        'Scene number indicators',
-                        'High-quality encoding (H.264, CRF 23)',
-                        'Professional video composition',
-                        'Automatic scene timing'
-                    ],
-                    'transition_types': {
-                        'Action': 'Fast crossfade (0.3s)',
-                        'Adventure': 'Smooth crossfade (0.8s)',
-                        'Comedy': 'Bounce crossfade (0.4s)',
-                        'Drama': 'Smooth crossfade (1.0s)',
-                        'Horror': 'Fade transition (0.6s)',
-                        'Romance': 'Smooth crossfade (1.2s)',
-                        'Sci-Fi': 'Glitch crossfade (0.7s)',
-                        'Fantasy': 'Magic crossfade (1.0s)',
-                        'Thriller': 'Sharp crossfade (0.5s)'
-                    }
+                    'input': 'Images + Script text',
+                    'output': 'MP4 video files',
+                    'features': ['Scene transitions', 'Text overlays', 'Music integration']
                 }
             }
         })
@@ -1113,60 +1093,14 @@ def generate_video():
                 'timestamp': time.time()
             }), 500
         
-        # Concatenate all clips with transitions
-        print(f"🔗 CONCATENATING VIDEO CLIPS WITH TRANSITIONS...")
+        # Concatenate all clips
+        print(f"🔗 CONCATENATING VIDEO CLIPS...")
         print(f"   📹 Loading {len(video_clips)} video clips...")
         clips = [VideoFileClip(clip) for clip in video_clips]
         print(f"   ✅ Loaded {len(clips)} video clips for concatenation")
         
-        print("🎬 CREATING FINAL VIDEO WITH TRANSITIONS...")
-        
-        # Add transitions between clips based on genre
-        if len(clips) > 1:
-            genre = movie_data.get('genre', 'Drama').lower()
-            print(f"   🎭 Adding {genre}-style transitions between scenes...")
-            
-            # Genre-specific transition settings
-            transition_settings = {
-                'action': {'type': 'crossfade', 'duration': 0.3, 'effect': 'fast'},
-                'adventure': {'type': 'crossfade', 'duration': 0.8, 'effect': 'smooth'},
-                'comedy': {'type': 'crossfade', 'duration': 0.4, 'effect': 'bounce'},
-                'drama': {'type': 'crossfade', 'duration': 1.0, 'effect': 'smooth'},
-                'horror': {'type': 'crossfade', 'duration': 0.6, 'effect': 'fade'},
-                'romance': {'type': 'crossfade', 'duration': 1.2, 'effect': 'smooth'},
-                'sci-fi': {'type': 'crossfade', 'duration': 0.7, 'effect': 'glitch'},
-                'fantasy': {'type': 'crossfade', 'duration': 1.0, 'effect': 'magic'},
-                'thriller': {'type': 'crossfade', 'duration': 0.5, 'effect': 'sharp'}
-            }
-            
-            settings = transition_settings.get(genre, transition_settings['drama'])
-            transition_duration = settings['duration']
-            transition_type = settings['type']
-            transition_effect = settings['effect']
-            
-            print(f"   ⚙️ Transition settings: {transition_type} ({transition_duration}s, {transition_effect})")
-            
-            # Create transitioned clips
-            transitioned_clips = []
-            for i, clip in enumerate(clips):
-                if i == 0:
-                    # First clip - no transition in
-                    transitioned_clips.append(clip)
-                else:
-                    # Add transition based on type
-                    if transition_type == 'crossfade':
-                        transitioned_clips.append(clip.crossfadein(transition_duration))
-                    else:
-                        # Default to crossfade
-                        transitioned_clips.append(clip.crossfadein(transition_duration))
-            
-            # Concatenate with transitions
-            final_video = concatenate_videoclips(transitioned_clips, method="compose")
-            print(f"   ✅ Added {len(clips)-1} {genre}-style transitions")
-        else:
-            # Single clip - no transitions needed
-            final_video = clips[0]
-            print("   ℹ️ Single scene - no transitions needed")
+        print("🎬 CREATING FINAL VIDEO...")
+        final_video = concatenate_videoclips(clips)
         
         # Get video paths based on storage type
         final_path, video_url = get_video_paths(video_id)
@@ -1174,101 +1108,8 @@ def generate_video():
         print(f"   🌐 Video URL: {video_url}")
         print(f"   ⏱️ Duration: {final_video.duration:.2f} seconds")
         
-        # Add cinematic effects
-        print("🎨 ADDING CINEMATIC EFFECTS...")
-        
-        # Add fade in/out effects
-        print("   🌅 Adding fade in/out effects...")
-        final_video = final_video.fadein(0.5).fadeout(0.5)
-        
-        # Add cinematic overlays
-        print("   📝 Adding cinematic overlays...")
-        from moviepy.editor import TextClip, CompositeVideoClip
-        
-        overlay_clips = []
-        
-        # Add title overlay if movie title exists
-        if movie_data.get('title'):
-            print(f"   📝 Adding title overlay: {movie_data.get('title')}")
-            
-            # Create title text with cinematic styling
-            title_clip = TextClip(
-                movie_data.get('title'),
-                fontsize=60,
-                color='white',
-                font='Arial-Bold',
-                stroke_color='black',
-                stroke_width=3,
-                method='caption',
-                size=(final_video.w * 0.8, None)
-            ).set_position(('center', 'top')).set_duration(4).set_start(0.5)
-            
-            # Add fade effect to title
-            title_clip = title_clip.fadein(0.5).fadeout(0.5)
-            overlay_clips.append(title_clip)
-            print("   ✅ Title overlay added")
-        
-        # Add genre/style info overlay
-        if movie_data.get('genre') or movie_data.get('style'):
-            print("   🎭 Adding genre/style overlay...")
-            genre_style_text = f"{movie_data.get('genre', '')} • {movie_data.get('style', '')}"
-            
-            info_clip = TextClip(
-                genre_style_text,
-                fontsize=35,
-                color='white',
-                font='Arial',
-                stroke_color='black',
-                stroke_width=2
-            ).set_position(('center', 'bottom')).set_duration(4).set_start(0.5)
-            
-            # Add fade effect
-            info_clip = info_clip.fadein(0.5).fadeout(0.5)
-            overlay_clips.append(info_clip)
-            print("   ✅ Genre/style overlay added")
-        
-        # Add scene number overlays for each scene
-        if len(clips) > 1:
-            print("   🔢 Adding scene number overlays...")
-            current_time = 0
-            
-            for i, clip in enumerate(clips):
-                scene_duration = clip.duration
-                scene_number = i + 1
-                
-                # Create scene number text
-                scene_clip = TextClip(
-                    f"Scene {scene_number}",
-                    fontsize=40,
-                    color='white',
-                    font='Arial-Bold',
-                    stroke_color='black',
-                    stroke_width=2
-                ).set_position(('right', 'top')).set_duration(2).set_start(current_time + 0.5)
-                
-                # Add fade effect
-                scene_clip = scene_clip.fadein(0.3).fadeout(0.3)
-                overlay_clips.append(scene_clip)
-                
-                current_time += scene_duration
-                print(f"   ✅ Scene {scene_number} overlay added")
-        
-        # Composite all overlays with video
-        if overlay_clips:
-            final_video = CompositeVideoClip([final_video] + overlay_clips)
-            print(f"   ✅ {len(overlay_clips)} overlays composited")
-        
         print("💾 WRITING FINAL VIDEO TO DISK...")
-        final_video.write_videofile(
-            final_path, 
-            codec='libx264', 
-            audio=False,
-            temp_audiofile='temp-audio.m4a',
-            remove_temp=True,
-            fps=24,  # Standard cinematic FPS
-            preset='medium',  # Balance between quality and speed
-            ffmpeg_params=['-crf', '23']  # High quality encoding
-        )
+        final_video.write_videofile(final_path, codec='libx264', audio=False)
         
         final_size = os.path.getsize(final_path)
         print(f"✅ FINAL VIDEO CREATED SUCCESSFULLY!")
@@ -1381,7 +1222,7 @@ def download_file(filename):
 
 if __name__ == '__main__':
     # Print the Colab URL
-    port = 5000
+    port = 8080
     print(f"\n{'='*60}")
     print(f"🎬 AI MOVIE GENERATOR - STARTING UP")
     print(f"{'='*60}")
@@ -1397,7 +1238,7 @@ if __name__ == '__main__':
     # Start ngrok tunnel if available
     if NGROK_AVAILABLE and os.getenv('NGROK_AUTHTOKEN'):
         ngrok.set_auth_token(os.getenv('NGROK_AUTHTOKEN'))
-        http_tunnel = ngrok.connect(5000)
+        http_tunnel = ngrok.connect(8080)
         print(f"🌍 Public URL: {http_tunnel.public_url}")
     
     app.run(host='0.0.0.0', port=port, debug=True)
