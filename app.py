@@ -1381,7 +1381,7 @@ def download_file(filename):
 
 if __name__ == '__main__':
     # Print the Colab URL
-    port = 8080
+    port = 5000
     print(f"\n{'='*60}")
     print(f"🎬 AI MOVIE GENERATOR - STARTING UP")
     print(f"{'='*60}")
@@ -1397,7 +1397,7 @@ if __name__ == '__main__':
     # Start ngrok tunnel if available
     if NGROK_AVAILABLE and os.getenv('NGROK_AUTHTOKEN'):
         ngrok.set_auth_token(os.getenv('NGROK_AUTHTOKEN'))
-        http_tunnel = ngrok.connect(8080)
+        http_tunnel = ngrok.connect(5000)
         print(f"🌍 Public URL: {http_tunnel.public_url}")
     
     app.run(host='0.0.0.0', port=port, debug=True)
